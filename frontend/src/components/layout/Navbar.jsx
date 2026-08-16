@@ -1,0 +1,46 @@
+import { Link, NavLink } from 'react-router-dom';
+
+const links = [
+  { to: '/', label: 'Home' },
+  { to: '/about', label: 'About' },
+  { to: '/events', label: 'Events' },
+  { to: '/gallery', label: 'Gallery' },
+  { to: '/blog', label: 'Blog' },
+  { to: '/volunteer', label: 'Volunteer' },
+  { to: '/contact', label: 'Contact' },
+];
+
+export default function Navbar() {
+  return (
+    <nav className="flex items-center justify-between px-10 py-4 bg-ivory border-b border-indigo/10">
+      <Link to="/" className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-marigold-soft to-vermilion" />
+        <div className="leading-tight">
+          <div className="font-display font-semibold text-sm text-indigo">ISKCON Jammu</div>
+          <div className="text-[9px] tracking-widest uppercase text-vermilion">Dream City, Muthi</div>
+        </div>
+      </Link>
+
+      <div className="hidden md:flex gap-6 text-[13px] text-indigo">
+        {links.map((l) => (
+          <NavLink
+            key={l.to}
+            to={l.to}
+            className={({ isActive }) =>
+              isActive ? 'border-b-2 border-marigold pb-1 font-semibold' : 'pb-1'
+            }
+          >
+            {l.label}
+          </NavLink>
+        ))}
+      </div>
+
+      <Link
+        to="/donate"
+        className="bg-vermilion text-ivory px-5 py-2.5 rounded text-[13px] font-semibold"
+      >
+        Donate / Seva
+      </Link>
+    </nav>
+  );
+}

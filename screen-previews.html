@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISKCON Jammu — Screen Previews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#1B2A4A;
+    --indigo-deep:#121D34;
+    --marigold:#E8A33D;
+    --marigold-soft:#F4C876;
+    --vermilion:#8C2F39;
+    --ivory:#F6EFE2;
+    --ivory-dim:#EDE3D0;
+    --teal:#1F6F6B;
+    --ink:#2A2420;
+    --line: rgba(27,42,74,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--indigo-deep);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+  }
+  .display{ font-family:'Fraunces',serif; }
+
+  /* ---- App shell: sidebar + preview frame ---- */
+  .shell{
+    display:flex;
+    min-height:100vh;
+  }
+  .sidebar{
+    width:230px;
+    flex-shrink:0;
+    background:var(--indigo);
+    color:var(--ivory);
+    padding:28px 18px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .sidebar h1{
+    font-family:'Fraunces',serif;
+    font-size:15px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--marigold-soft);
+    margin:0 0 4px;
+  }
+  .sidebar p.sub{
+    font-size:11px;
+    color:rgba(246,239,226,0.55);
+    margin:0 0 26px;
+    letter-spacing:0.02em;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:8px;
+    font-size:13px;
+    color:rgba(246,239,226,0.75);
+    cursor:pointer;
+    margin-bottom:4px;
+    border:1px solid transparent;
+    transition:.15s;
+  }
+  .nav-item .n{
+    font-family:'Fraunces',serif;
+    font-size:11px;
+    color:var(--marigold-soft);
+    width:16px;
+  }
+  .nav-item:hover{ background:rgba(246,239,226,0.06); }
+  .nav-item.active{
+    background:rgba(232,163,61,0.14);
+    border-color:rgba(232,163,61,0.4);
+    color:var(--ivory);
+  }
+  .sidebar-foot{
+    margin-top:24px;
+    padding-top:16px;
+    border-top:1px solid rgba(246,239,226,0.12);
+    font-size:10.5px;
+    color:rgba(246,239,226,0.4);
+    line-height:1.6;
+  }
+
+  .stage{
+    flex:1;
+    padding:28px;
+    overflow-x:hidden;
+  }
+  .browser-frame{
+    background:var(--ivory);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .browser-chrome{
+    background:#E4D9C3;
+    padding:10px 14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .dot{ width:9px;height:9px;border-radius:50%; }
+  .browser-url{
+    flex:1;
+    background:var(--ivory);
+    border-radius:6px;
+    padding:5px 12px;
+    font-size:11px;
+    color:#8a7f6a;
+    margin-left:8px;
+    font-family:'Inter',sans-serif;
+  }
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* ---- shared site chrome inside mockups ---- */
+  .site-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 40px;
+    background:var(--ivory);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--marigold-soft), var(--vermilion) 75%);
+    flex-shrink:0;
+  }
+  .brand-name{ font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--indigo); line-height:1.2;}
+  .brand-name span{ display:block; font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.12em; color:var(--vermilion); text-transform:uppercase; }
+  .site-links{ display:flex; gap:26px; font-size:12.5px; color:var(--indigo); }
+  .site-links b{ border-bottom:2px solid var(--marigold); padding-bottom:3px; }
+  .btn-primary{
+    background:var(--vermilion); color:var(--ivory); border:none;
+    padding:10px 20px; border-radius:3px; font-size:12.5px; font-weight:600;
+    letter-spacing:.03em; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .btn-ghost{
+    background:transparent; color:var(--indigo); border:1px solid var(--indigo);
+    padding:9px 18px; border-radius:3px; font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+
+  .arch-photo{
+    border-radius:120px 120px 8px 8px;
+    background:linear-gradient(160deg, #2E4468, var(--indigo-deep));
+    position:relative;
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .arch-photo::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(232,163,61,0.35), transparent 55%),
+      radial-gradient(circle at 75% 70%, rgba(31,111,107,0.35), transparent 50%);
+  }
+  .arch-photo .glyph{ font-size:38px; opacity:.85; z-index:1; }
+
+  .eyebrow{
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--vermilion); font-weight:600; margin-bottom:8px; display:block;
+  }
+  .section-pad{ padding:56px 40px; }
+  .divider-marigold{
+    height:3px; width:60px; background:var(--marigold); margin:14px 0 20px; border-radius:2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ================= SIDEBAR ================= -->
+  <div class="sidebar">
+    <h1>ISKCON Jammu</h1>
+    <p class="sub">Screen previews &middot; Dream City, Muthi</p>
+
+    <div class="nav-item active" data-screen="home"><span class="n">01</span> Home</div>
+    <div class="nav-item" data-screen="about"><span class="n">02</span> About the Temple</div>
+    <div class="nav-item" data-screen="events"><span class="n">03</span> Events &amp; Festivals</div>
+    <div class="nav-item" data-screen="donate"><span class="n">04</span> Donation / Seva</div>
+    <div class="nav-item" data-screen="gallery"><span class="n">05</span> Gallery</div>
+    <div class="nav-item" data-screen="blog"><span class="n">06</span> Blog</div>
+    <div class="nav-item" data-screen="contact"><span class="n">07</span> Contact</div>
+    <div class="nav-item" data-screen="admin"><span class="n">08</span> Admin Dashboard</div>
+
+    <div class="sidebar-foot">
+      Static visual mockups — layout &amp; content reference only, not wired to the backend.
+    </div>
+  </div>
+
+  <!-- ================= STAGE ================= -->
+  <div class="stage">
+    <div class="browser-frame">
+      <div class="browser-chrome">
+        <div class="dot" style="background:#E88A7D"></div>
+        <div class="dot" style="background:#E8C97D"></div>
+        <div class="dot" style="background:#8DBF9B"></div>
+        <div class="browser-url" id="url-bar">iskconjammu.org</div>
+      </div>
+
+      <!-- ============ 01 HOME ============ -->
+      <div class="screen active" id="home">
+        <div class="site-nav">
+          <div class="brand">
+            <div class="brand-mark"></div>
+            <div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div>
+          </div>
+          <div class="site-links">
+            <b>Home</b><div>About</div><div>Events</div><div>Gallery</div><div>Blog</div><div>Contact</div>
+          </div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <!-- hero -->
+        <div style="display:flex; padding:50px 40px 40px; gap:44px; align-items:center; background:linear-gradient(180deg,#F6EFE2,#EFE4CE);">
+          <div style="flex:1;">
+            <span class="eyebrow">Hare Krishna &middot; Welcome</span>
+            <h1 class="display" style="font-size:40px; line-height:1.12; color:var(--indigo); margin:0 0 16px; font-weight:600;">
+              A home for Krishna<br>consciousness in Jammu
+            </h1>
+            <p style="font-size:14.5px; color:#5b5344; line-height:1.7; max-width:420px; margin:0 0 26px;">
+              Join us for daily darshan, kirtan and prasadam at ISKCON Jammu — nestled in Dream City, Muthi. All are welcome, every day of the year.
+            </p>
+            <div style="display:flex; gap:12px;">
+              <button class="btn-primary">Today's Darshan Timings</button>
+              <button class="btn-ghost">Plan a Visit</button>
+            </div>
+            <div style="display:flex; gap:28px; margin-top:34px;">
+              <div><div class="display" style="font-size:22px;color:var(--vermilion);">4:30 AM</div><div style="font-size:11px;color:#8a7f6a;">Mangala Aarti</div></div>
+              <div><div class="display" style="font-size:22px;color:var(--vermilion);">7:00 PM</div><div style="font-size:11px;color:#8a7f6a;">Sandhya Aarti</div></div>
+              <div><div class="display" style="font-size:22px;color:var(--vermilion);">Daily</div><div style="font-size:11px;color:#8a7f6a;">Free Prasadam</div></div>
+            </div>
+          </div>
+          <div class="arch-photo" style="width:340px; height:300px;"><span class="glyph">🪷</span></div>
+        </div>
+
+        <!-- announcement strip -->
+        <div style="background:var(--vermilion); color:var(--ivory); padding:10px 40px; font-size:12.5px; display:flex; gap:10px; align-items:center;">
+          <span style="background:var(--marigold); color:var(--indigo); font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:10px;">FESTIVAL</span>
+          Janmashtami celebrations begin in 12 days — midnight abhishek, full-night kirtan &amp; mahaprasadam
+        </div>
+
+        <!-- quick links -->
+        <div class="section-pad" style="padding-bottom:20px;">
+          <span class="eyebrow">Explore</span>
+          <h2 class="display" style="font-size:24px; color:var(--indigo); margin:0 0 26px; font-weight:600;">Everything you need, at a glance</h2>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px;">
+              <div style="font-size:22px;">🕉️</div>
+              <div style="font-weight:600; font-size:13.5px; margin:10px 0 4px; color:var(--indigo);">Daily Timings</div>
+              <div style="font-size:12px; color:#8a7f6a;">Aarti &amp; darshan schedule</div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px;">
+              <div style="font-size:22px;">🎉</div>
+              <div style="font-weight:600; font-size:13.5px; margin:10px 0 4px; color:var(--indigo);">Upcoming Festivals</div>
+              <div style="font-size:12px; color:#8a7f6a;">Janmashtami, Ratha Yatra</div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px;">
+              <div style="font-size:22px;">🙏</div>
+              <div style="font-weight:600; font-size:13.5px; margin:10px 0 4px; color:var(--indigo);">Seva &amp; Donation</div>
+              <div style="font-size:12px; color:#8a7f6a;">Annadaan, Deity seva</div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px;">
+              <div style="font-size:22px;">📖</div>
+              <div style="font-weight:600; font-size:13.5px; margin:10px 0 4px; color:var(--indigo);">Reading Room</div>
+              <div style="font-size:12px; color:#8a7f6a;">Articles on bhakti &amp; scripture</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 02 ABOUT ============ -->
+      <div class="screen" id="about">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><b>About</b><div>Events</div><div>Gallery</div><div>Blog</div><div>Contact</div></div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <div style="padding:50px 40px; display:flex; gap:44px;">
+          <div style="flex:1;">
+            <span class="eyebrow">Our Story</span>
+            <h1 class="display" style="font-size:32px; color:var(--indigo); margin:0 0 6px; font-weight:600;">About ISKCON Jammu</h1>
+            <div class="divider-marigold"></div>
+            <p style="font-size:13.5px; line-height:1.85; color:#5b5344; margin:0 0 16px;">
+              ISKCON Jammu, situated in Dream City, Muthi, serves as a spiritual home for devotees across the region — offering daily worship, scriptural study and community festivals rooted in the Gaudiya Vaishnava tradition founded by Srila Prabhupada.
+            </p>
+            <p style="font-size:13.5px; line-height:1.85; color:#5b5344; margin:0;">
+              The temple welcomes visitors of every background for darshan, kirtan, and prasadam — with a growing congregation active in seva, youth programs and outreach across Jammu.
+            </p>
+
+            <div style="margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="border-left:3px solid var(--marigold); padding-left:14px;">
+                <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600;">Presiding Deities</div>
+                <div style="font-size:12.5px; color:#8a7f6a; margin-top:4px;">Sri Sri Radha Krishna</div>
+              </div>
+              <div style="border-left:3px solid var(--teal); padding-left:14px;">
+                <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600;">Founder-Acharya</div>
+                <div style="font-size:12.5px; color:#8a7f6a; margin-top:4px;">His Divine Grace A.C. Bhaktivedanta Swami Prabhupada</div>
+              </div>
+            </div>
+          </div>
+          <div class="arch-photo" style="width:300px; height:340px; flex-shrink:0;"><span class="glyph">🛕</span></div>
+        </div>
+
+        <div style="background:var(--ivory-dim); padding:40px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+          <div style="text-align:center;">
+            <div class="display" style="font-size:26px; color:var(--vermilion); font-weight:600;">365</div>
+            <div style="font-size:11.5px; color:#8a7f6a;">days of darshan a year</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="display" style="font-size:26px; color:var(--vermilion); font-weight:600;">50+</div>
+            <div style="font-size:11.5px; color:#8a7f6a;">festivals &amp; programs annually</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="display" style="font-size:26px; color:var(--vermilion); font-weight:600;">Free</div>
+            <div style="font-size:11.5px; color:#8a7f6a;">daily prasadam distribution</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 03 EVENTS ============ -->
+      <div class="screen" id="events">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><div>About</div><b>Events</b><div>Gallery</div><div>Blog</div><div>Contact</div></div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <div style="padding:40px;">
+          <span class="eyebrow">What's On</span>
+          <h1 class="display" style="font-size:28px; color:var(--indigo); margin:0 0 4px; font-weight:600;">Events &amp; Festivals</h1>
+          <div class="divider-marigold"></div>
+
+          <div style="display:flex; gap:10px; margin-bottom:22px;">
+            <span style="background:var(--indigo); color:var(--ivory); font-size:11.5px; padding:6px 14px; border-radius:16px;">All</span>
+            <span style="border:1px solid var(--line); font-size:11.5px; padding:6px 14px; border-radius:16px; color:var(--indigo);">Festival</span>
+            <span style="border:1px solid var(--line); font-size:11.5px; padding:6px 14px; border-radius:16px; color:var(--indigo);">Satsang</span>
+            <span style="border:1px solid var(--line); font-size:11.5px; padding:6px 14px; border-radius:16px; color:var(--indigo);">Seva</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;">
+              <div class="arch-photo" style="height:110px; border-radius:0;"><span class="glyph" style="font-size:26px;">🪈</span></div>
+              <div style="padding:16px;">
+                <div style="font-size:10.5px; color:var(--vermilion); font-weight:600; letter-spacing:.05em;">SEP 04 &middot; FESTIVAL</div>
+                <div class="display" style="font-size:15.5px; color:var(--indigo); margin:6px 0 6px; font-weight:600;">Sri Krishna Janmashtami</div>
+                <div style="font-size:12px; color:#8a7f6a;">Midnight abhishek, kirtan &amp; mahaprasadam</div>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;">
+              <div class="arch-photo" style="height:110px; border-radius:0;"><span class="glyph" style="font-size:26px;">🎊</span></div>
+              <div style="padding:16px;">
+                <div style="font-size:10.5px; color:var(--teal); font-weight:600; letter-spacing:.05em;">SEP 21 &middot; SEVA</div>
+                <div class="display" style="font-size:15.5px; color:var(--indigo); margin:6px 0 6px; font-weight:600;">Annadaan Sunday</div>
+                <div style="font-size:12px; color:#8a7f6a;">Community meal distribution seva</div>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;">
+              <div class="arch-photo" style="height:110px; border-radius:0;"><span class="glyph" style="font-size:26px;">📿</span></div>
+              <div style="padding:16px;">
+                <div style="font-size:10.5px; color:var(--vermilion); font-weight:600; letter-spacing:.05em;">OCT 02 &middot; SATSANG</div>
+                <div class="display" style="font-size:15.5px; color:var(--indigo); margin:6px 0 6px; font-weight:600;">Bhagavad Gita Study Circle</div>
+                <div style="font-size:12px; color:#8a7f6a;">Weekly reading &amp; discussion group</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:26px; background:var(--indigo); color:var(--ivory); border-radius:8px; padding:22px 26px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:10.5px; color:var(--marigold-soft); letter-spacing:.1em;">FEATURED &middot; RSVP OPEN</div>
+              <div class="display" style="font-size:17px; margin-top:4px; font-weight:600;">Ratha Yatra Procession — Dream City, Muthi</div>
+            </div>
+            <button class="btn-primary" style="background:var(--marigold); color:var(--indigo);">RSVP Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 04 DONATE ============ -->
+      <div class="screen" id="donate">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><div>About</div><div>Events</div><div>Gallery</div><div>Blog</div><div>Contact</div></div>
+          <button class="btn-primary" style="background:var(--indigo);">Donate / Seva</button>
+        </div>
+
+        <div style="padding:40px;">
+          <span class="eyebrow">Give With Devotion</span>
+          <h1 class="display" style="font-size:28px; color:var(--indigo); margin:0 0 4px; font-weight:600;">Donation &amp; Seva</h1>
+          <div class="divider-marigold"></div>
+          <p style="font-size:12.5px; color:#8a7f6a; max-width:520px; margin:0 0 26px;">Every contribution supports temple worship, prasadam distribution and community outreach. Receipts (incl. 80G) are emailed instantly.</p>
+
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:30px;">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px; text-align:center;">
+              <div style="font-size:24px;">🍚</div>
+              <div class="display" style="font-weight:600; font-size:14px; color:var(--indigo); margin:8px 0 4px;">Annadaan</div>
+              <div style="font-size:11.5px; color:#8a7f6a;">Sponsor a prasadam meal</div>
+            </div>
+            <div style="background:#fff; border:2px solid var(--marigold); border-radius:8px; padding:20px; text-align:center; position:relative;">
+              <div style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--marigold); color:var(--indigo); font-size:9px; font-weight:700; padding:2px 10px; border-radius:10px;">POPULAR</div>
+              <div style="font-size:24px;">🌸</div>
+              <div class="display" style="font-weight:600; font-size:14px; color:var(--indigo); margin:8px 0 4px;">Deity Seva</div>
+              <div style="font-size:11.5px; color:#8a7f6a;">Flowers &amp; ornamentation</div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px; text-align:center;">
+              <div style="font-size:24px;">🏗️</div>
+              <div class="display" style="font-weight:600; font-size:14px; color:var(--indigo); margin:8px 0 4px;">Construction Fund</div>
+              <div style="font-size:11.5px; color:#8a7f6a;">Temple expansion project</div>
+            </div>
+          </div>
+
+          <div style="background:var(--ivory-dim); border-radius:10px; padding:26px; max-width:420px;">
+            <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600; margin-bottom:14px;">Quick Donate</div>
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <span style="background:var(--indigo); color:var(--ivory); padding:8px 14px; border-radius:5px; font-size:12.5px;">₹501</span>
+              <span style="background:#fff; border:1px solid var(--line); padding:8px 14px; border-radius:5px; font-size:12.5px;">₹1,101</span>
+              <span style="background:#fff; border:1px solid var(--line); padding:8px 14px; border-radius:5px; font-size:12.5px;">₹2,100</span>
+              <span style="background:#fff; border:1px solid var(--line); padding:8px 14px; border-radius:5px; font-size:12.5px;">Other</span>
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:5px; padding:10px 12px; font-size:12px; color:#8a7f6a; margin-bottom:10px;">Full Name</div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:5px; padding:10px 12px; font-size:12px; color:#8a7f6a; margin-bottom:16px;">Email &amp; Phone</div>
+            <button class="btn-primary" style="width:100%; background:var(--vermilion); padding:12px;">Proceed to Pay — Razorpay</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 05 GALLERY ============ -->
+      <div class="screen" id="gallery">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><div>About</div><div>Events</div><b>Gallery</b><div>Blog</div><div>Contact</div></div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <div style="padding:40px;">
+          <span class="eyebrow">Moments of Bhakti</span>
+          <h1 class="display" style="font-size:28px; color:var(--indigo); margin:0 0 4px; font-weight:600;">Gallery</h1>
+          <div class="divider-marigold"></div>
+
+          <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <span style="background:var(--indigo); color:var(--ivory); font-size:11px; padding:5px 13px; border-radius:14px;">All</span>
+            <span style="border:1px solid var(--line); font-size:11px; padding:5px 13px; border-radius:14px;">Janmashtami</span>
+            <span style="border:1px solid var(--line); font-size:11px; padding:5px 13px; border-radius:14px;">Ratha Yatra</span>
+            <span style="border:1px solid var(--line); font-size:11px; padding:5px 13px; border-radius:14px;">Daily Darshan</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:100px; gap:10px;">
+            <div class="arch-photo" style="border-radius:6px; grid-row:span 2;"><span class="glyph">🪷</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🕯️</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🎺</span></div>
+            <div class="arch-photo" style="border-radius:6px; grid-row:span 2;"><span class="glyph">🛕</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🌼</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">📿</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🥁</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🍚</span></div>
+            <div class="arch-photo" style="border-radius:6px;"><span class="glyph" style="font-size:22px;">🎊</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 06 BLOG ============ -->
+      <div class="screen" id="blog">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><div>About</div><div>Events</div><div>Gallery</div><b>Blog</b><div>Contact</div></div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <div style="padding:40px; display:flex; gap:36px;">
+          <div style="flex:2;">
+            <span class="eyebrow">Reading Room</span>
+            <h1 class="display" style="font-size:28px; color:var(--indigo); margin:0 0 4px; font-weight:600;">Blog</h1>
+            <div class="divider-marigold"></div>
+
+            <div style="display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--line);">
+              <div class="arch-photo" style="width:110px; height:80px; border-radius:6px; flex-shrink:0;"><span class="glyph" style="font-size:20px;">📖</span></div>
+              <div>
+                <div style="font-size:10px; color:var(--vermilion); font-weight:600;">BHAKTI &middot; 6 MIN READ</div>
+                <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600; margin:5px 0;">What the Bhagavad Gita Teaches About Duty</div>
+                <div style="font-size:12px; color:#8a7f6a;">A reflection on karma yoga in daily life, for devotees new and old.</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--line);">
+              <div class="arch-photo" style="width:110px; height:80px; border-radius:6px; flex-shrink:0;"><span class="glyph" style="font-size:20px;">🕉️</span></div>
+              <div>
+                <div style="font-size:10px; color:var(--vermilion); font-weight:600;">FESTIVAL &middot; 4 MIN READ</div>
+                <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600; margin:5px 0;">The Significance of Janmashtami</div>
+                <div style="font-size:12px; color:#8a7f6a;">Why devotees observe a midnight vigil each year.</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:16px; padding:18px 0;">
+              <div class="arch-photo" style="width:110px; height:80px; border-radius:6px; flex-shrink:0;"><span class="glyph" style="font-size:20px;">🌾</span></div>
+              <div>
+                <div style="font-size:10px; color:var(--vermilion); font-weight:600;">SEVA &middot; 3 MIN READ</div>
+                <div class="display" style="font-size:15px; color:var(--indigo); font-weight:600; margin:5px 0;">Inside Our Weekly Annadaan Kitchen</div>
+                <div style="font-size:12px; color:#8a7f6a;">How volunteers prepare and serve prasadam to hundreds.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;">
+            <div style="background:var(--ivory-dim); border-radius:8px; padding:20px;">
+              <div class="display" style="font-size:13.5px; font-weight:600; color:var(--indigo); margin-bottom:12px;">Language</div>
+              <div style="display:flex; gap:8px;">
+                <span style="background:var(--indigo); color:var(--ivory); font-size:11px; padding:6px 14px; border-radius:14px;">English</span>
+                <span style="border:1px solid var(--line); font-size:11px; padding:6px 14px; border-radius:14px;">हिन्दी</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 07 CONTACT ============ -->
+      <div class="screen" id="contact">
+        <div class="site-nav">
+          <div class="brand"><div class="brand-mark"></div><div class="brand-name">ISKCON Jammu<span>Dream City, Muthi</span></div></div>
+          <div class="site-links"><div>Home</div><div>About</div><div>Events</div><div>Gallery</div><div>Blog</div><b>Contact</b></div>
+          <button class="btn-primary">Donate / Seva</button>
+        </div>
+
+        <div style="display:flex;">
+          <div style="flex:1; padding:44px 40px;">
+            <span class="eyebrow">We'd Love to See You</span>
+            <h1 class="display" style="font-size:26px; color:var(--indigo); margin:0 0 4px; font-weight:600;">Visit or Reach Out</h1>
+            <div class="divider-marigold"></div>
+            <div style="font-size:13px; color:#5b5344; line-height:1.9; margin-bottom:22px;">
+              ISKCON Jammu<br>Dream City, Muthi, Jammu, J&amp;K<br>
+              📞 +91 XXXXX XXXXX &nbsp;&middot;&nbsp; ✉️ info@iskconjammu.org
+            </div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:5px; padding:10px 12px; font-size:12px; color:#8a7f6a; margin-bottom:10px;">Your Name</div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:5px; padding:10px 12px; font-size:12px; color:#8a7f6a; margin-bottom:10px;">Email</div>
+            <div style="background:#fff; border:1px solid var(--line); border-radius:5px; padding:30px 12px; font-size:12px; color:#8a7f6a; margin-bottom:14px;">Your Message</div>
+            <button class="btn-primary">Send Message</button>
+          </div>
+          <div class="arch-photo" style="flex:1; border-radius:0; min-height:340px;">
+            <span class="glyph" style="font-size:15px; background:rgba(255,255,255,0.9); color:var(--indigo); padding:8px 16px; border-radius:20px; font-family:'Inter',sans-serif; font-weight:600;">📍 Map — Dream City, Muthi, Jammu</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 08 ADMIN ============ -->
+      <div class="screen" id="admin">
+        <div style="display:flex; min-height:520px;">
+          <div style="width:190px; background:var(--indigo); color:var(--ivory); padding:22px 16px; flex-shrink:0;">
+            <div class="display" style="font-size:14px; font-weight:600; color:var(--marigold-soft); margin-bottom:24px;">Admin Panel</div>
+            <div style="font-size:12px; padding:9px 10px; border-radius:6px; background:rgba(232,163,61,0.15); margin-bottom:4px;">📊 Dashboard</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">🎉 Events</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">💰 Donations</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">🖼️ Gallery</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">📝 Blog</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">⚙️ Settings</div>
+            <div style="font-size:12px; padding:9px 10px; opacity:.75;">👤 Staff Users</div>
+          </div>
+
+          <div style="flex:1; padding:28px 32px; background:#FBF8F1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:22px;">
+              <div class="display" style="font-size:18px; color:var(--indigo); font-weight:600;">Welcome back, Temple Admin</div>
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--marigold);"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;">
+              <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px;">
+                <div style="font-size:10.5px; color:#8a7f6a;">Donations (30d)</div>
+                <div class="display" style="font-size:20px; color:var(--indigo); font-weight:600;">₹2,84,300</div>
+              </div>
+              <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px;">
+                <div style="font-size:10.5px; color:#8a7f6a;">Upcoming Events</div>
+                <div class="display" style="font-size:20px; color:var(--indigo); font-weight:600;">6</div>
+              </div>
+              <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px;">
+                <div style="font-size:10.5px; color:#8a7f6a;">RSVPs This Week</div>
+                <div class="display" style="font-size:20px; color:var(--indigo); font-weight:600;">142</div>
+              </div>
+              <div style="background:#fff; border:1px solid var(--line); border-radius:8px; padding:16px;">
+                <div style="font-size:10.5px; color:#8a7f6a;">Gallery Uploads</div>
+                <div class="display" style="font-size:20px; color:var(--indigo); font-weight:600;">318</div>
+              </div>
+            </div>
+
+            <div style="background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;">
+              <div style="padding:14px 18px; border-bottom:1px solid var(--line); font-size:12.5px; font-weight:600; color:var(--indigo);">Recent Donations</div>
+              <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:10px 18px; font-size:10.5px; color:#8a7f6a; text-transform:uppercase; letter-spacing:.04em;">
+                <div>Donor</div><div>Category</div><div>Amount</div><div>Status</div>
+              </div>
+              <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:11px 18px; font-size:12.5px; border-top:1px solid var(--line);">
+                <div>Radhika Sharma</div><div>Deity Seva</div><div>₹2,100</div><div style="color:var(--teal);">● Paid</div>
+              </div>
+              <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:11px 18px; font-size:12.5px; border-top:1px solid var(--line);">
+                <div>Amit Gupta</div><div>Annadaan</div><div>₹501</div><div style="color:var(--teal);">● Paid</div>
+              </div>
+              <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:11px 18px; font-size:12.5px; border-top:1px solid var(--line);">
+                <div>Priya Mahajan</div><div>Construction</div><div>₹5,000</div><div style="color:#C99A3B;">● Created</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const items = document.querySelectorAll('.nav-item');
+  const screens = document.querySelectorAll('.screen');
+  const urlBar = document.getElementById('url-bar');
+  const urls = {
+    home: 'iskconjammu.org',
+    about: 'iskconjammu.org/about',
+    events: 'iskconjammu.org/events',
+    donate: 'iskconjammu.org/donate',
+    gallery: 'iskconjammu.org/gallery',
+    blog: 'iskconjammu.org/blog',
+    contact: 'iskconjammu.org/contact',
+    admin: 'iskconjammu.org/admin/dashboard'
+  };
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      items.forEach(i => i.classList.remove('active'));
+      screens.forEach(s => s.classList.remove('active'));
+      item.classList.add('active');
+      const target = item.dataset.screen;
+      document.getElementById(target).classList.add('active');
+      urlBar.textContent = urls[target];
+    });
+  });
+</script>
+
+</body>
+</html>
