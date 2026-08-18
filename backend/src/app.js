@@ -28,6 +28,12 @@ app.get('/api/health', (req, res) => res.json({ success: true, status: 'ok' }));
 
 // Each module owns its own router — this is what makes it easy to later
 // extract, e.g., /api/donations into its own service with no logic changes.
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'ISKCON Jammu Backend is running'
+  });
+});
 app.use('/api/events', eventRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/gallery', galleryRoutes);
