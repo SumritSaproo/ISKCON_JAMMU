@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: iskcon-jammu-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      # Set these manually in the Render dashboard (Secrets) rather than
+      # here, so they never end up committed to git:
+      # MONGO_URI, REDIS_URL, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET,
+      # CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,
+      # RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET,
+      # SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM,
+      # TEMPLE_CONTACT_EMAIL, CLIENT_URL
