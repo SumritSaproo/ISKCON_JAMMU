@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
@@ -34,33 +35,36 @@ function PublicLayout({ children }) {
 
 export default function App() {
   return (
-    <Routes>
-      {/* ---- Public site ---- */}
-      <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-      <Route path="/events" element={<PublicLayout><Events /></PublicLayout>} />
-      <Route path="/events/:slug" element={<PublicLayout><Events /></PublicLayout>} />
-      <Route path="/donate" element={<PublicLayout><Donate /></PublicLayout>} />
-      <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
-      <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
-      <Route path="/blog/:slug" element={<PublicLayout><Blog /></PublicLayout>} />
-      <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
-      <Route path="/volunteer" element={<PublicLayout><Volunteer /></PublicLayout>} />
+    <>
+      <Routes>
+        {/* ---- Public site ---- */}
+        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+        <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+        <Route path="/events" element={<PublicLayout><Events /></PublicLayout>} />
+        <Route path="/events/:slug" element={<PublicLayout><Events /></PublicLayout>} />
+        <Route path="/donate" element={<PublicLayout><Donate /></PublicLayout>} />
+        <Route path="/gallery" element={<PublicLayout><Gallery /></PublicLayout>} />
+        <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
+        <Route path="/blog/:slug" element={<PublicLayout><Blog /></PublicLayout>} />
+        <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+        <Route path="/volunteer" element={<PublicLayout><Volunteer /></PublicLayout>} />
 
-      {/* ---- Admin ---- */}
-      <Route path="/admin/login" element={<Login />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="events" element={<EventsAdmin />} />
-          <Route path="donations" element={<DonationsAdmin />} />
-          <Route path="gallery" element={<GalleryAdmin />} />
-          <Route path="blog" element={<BlogAdmin />} />
-          <Route path="volunteers" element={<VolunteersAdmin />} />
-          <Route path="messages" element={<MessagesAdmin />} />
-          <Route path="settings" element={<SettingsAdmin />} />
+        {/* ---- Admin ---- */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="events" element={<EventsAdmin />} />
+            <Route path="donations" element={<DonationsAdmin />} />
+            <Route path="gallery" element={<GalleryAdmin />} />
+            <Route path="blog" element={<BlogAdmin />} />
+            <Route path="volunteers" element={<VolunteersAdmin />} />
+            <Route path="messages" element={<MessagesAdmin />} />
+            <Route path="settings" element={<SettingsAdmin />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+      <Analytics />
+    </>
   );
 }
