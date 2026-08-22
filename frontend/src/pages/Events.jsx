@@ -123,7 +123,7 @@ export default function Events() {
       {isLoading ? (
         <p className="text-sm text-indigo/60">Loading events…</p>
       ) : !events?.length ? (
-        <p className="text-sm text-indigo/60">No upcoming events in this category yet.</p>
+        <p className="text-sm text-indigo/60">No events in this category yet.</p>
       ) : (
         <div className="grid md:grid-cols-3 gap-4">
           {events.map((event) => (

@@ -17,8 +17,13 @@ export default function Navbar() {
   return (
     <nav className="relative bg-ivory border-b border-indigo/10 px-4 sm:px-6 lg:px-10 py-3 sm:py-4">
       <div className="flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-marigold-soft to-vermilion" />
+      <Link to="/" className="flex items-center gap-3">
+        <img
+          src="/iskconjammulogo.jpg"
+          alt="ISKCON Jammu logo"
+          className="w-10 h-10 rounded-full object-cover"
+          draggable="false"
+        />
         <div className="leading-tight">
           <div className="font-display font-semibold text-sm text-indigo">ISKCON Jammu</div>
           <div className="text-[9px] tracking-widest uppercase text-vermilion">Dream City, Muthi</div>

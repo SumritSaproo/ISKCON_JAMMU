@@ -12,20 +12,19 @@ function slugify(title) {
 }
 
 async function listUpcomingEvents({ category, limit = 20 } = {}) {
-  const cacheKey = `events:upcoming:${category || 'all'}:${limit}`;
-  // Upcoming events are read constantly (homepage, events page) and change
-  // rarely — a short TTL cache absorbs most of the read traffic.
+  const cacheKey = `events:all:${category || 'all'}:${limit}`;
+  // Public event listings are cached briefly to absorb repeated page loads.
   return cacheAside(cacheKey, 300, async () => {
-    const query = { startDate: { $gte: new Date() } };
+    const query = {};
     if (category) query.category = category;
-    return Event.find(query).select('-rsvpCount -rsvps').sort({ startDate: 1 }).limit(limit).lean();
+    return Event.find(query).select('-rsvpCount -rsvps').sort({ startDate: -1 }).limit(limit).lean();
   });
 }
 
 async function listAdminUpcomingEvents({ category, limit = 100 } = {}) {
-  const query = { startDate: { $gte: new Date() } };
+  const query = {};
   if (category) query.category = category;
-  return Event.find(query).sort({ startDate: 1 }).limit(limit).lean();
+  return Event.find(query).sort({ startDate: -1 }).limit(limit).lean();
 }
 
 async function getEventBySlug(slug) {
@@ -79,8 +78,10 @@ async function deleteEvent(id) {
 }
 
 async function invalidateUpcomingCache() {
+  if (!redis) return;
+
   try {
-    const keys = await redis.keys('events:upcoming:*');
+    const keys = await redis.keys('events:*');
     if (keys.length) await redis.del(...keys);
   } catch (_) { /* cache invalidation is best-effort */ }
 }
