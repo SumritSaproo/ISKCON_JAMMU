@@ -9,7 +9,7 @@ export default function DonationsAdmin() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex flex-wrap gap-3 justify-between items-center mb-5">
         <div className="font-display font-semibold text-lg text-indigo">Donations</div>
         <div className="flex gap-2">
           {['paid', 'created', 'failed'].map((s) => (
@@ -35,8 +35,8 @@ export default function DonationsAdmin() {
         </div>
       )}
 
-      <div className="bg-white border border-indigo/10 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-5 px-4.5 py-2.5 text-[10.5px] text-indigo/50 uppercase tracking-wide">
+      <div className="bg-white border border-indigo/10 rounded-lg overflow-x-auto">
+        <div className="grid grid-cols-5 min-w-[720px] px-4.5 py-2.5 text-[10.5px] text-indigo/50 uppercase tracking-wide">
           <div>Donor</div>
           <div>Category</div>
           <div>Amount</div>
@@ -51,7 +51,7 @@ export default function DonationsAdmin() {
           donations.map((d) => (
             <div
               key={d._id}
-              className="grid grid-cols-5 px-4.5 py-2.5 text-xs border-t border-indigo/10"
+              className="grid grid-cols-5 min-w-[720px] px-4.5 py-2.5 text-xs border-t border-indigo/10"
             >
               <div>
                 {d.donorName}

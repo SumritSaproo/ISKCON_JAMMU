@@ -23,7 +23,7 @@ export default function Volunteer() {
 
   if (registerVolunteer.isSuccess) {
     return (
-      <div className="px-10 py-16 max-w-md mx-auto text-center">
+      <div className="px-4 sm:px-6 lg:px-10 py-16 max-w-md mx-auto text-center">
         <div className="text-4xl mb-3">🙏</div>
         <h1 className="font-display font-semibold text-2xl text-indigo mb-2">Thank You!</h1>
         <p className="text-sm text-indigo/70">
@@ -34,7 +34,7 @@ export default function Volunteer() {
   }
 
   return (
-    <div className="px-10 py-14 max-w-xl">
+    <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 max-w-xl">
       <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
         Join Bhakti Vriksha
       </span>

@@ -10,7 +10,7 @@ export default function Blog() {
 
   if (slug && post) {
     return (
-      <div className="px-10 py-14 max-w-2xl">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 max-w-2xl">
         <div className="text-[10px] text-vermilion font-semibold">
           {new Date(post.publishedAt).toLocaleDateString('en-IN', {
             month: 'long',
@@ -28,7 +28,7 @@ export default function Blog() {
   }
 
   return (
-    <div className="px-10 py-14 flex gap-9 flex-wrap">
+    <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 flex gap-9 flex-wrap">
       <div className="flex-[2] min-w-[280px]">
         <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
           Reading Room

@@ -17,10 +17,10 @@ export default function AdminLayout() {
   const user = getStoredUser();
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-52 bg-indigo text-ivory p-5 flex-shrink-0">
-        <div className="font-display font-semibold text-marigold-soft mb-6">Admin Panel</div>
-        <nav className="space-y-1">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <aside className="w-full md:w-52 bg-indigo text-ivory p-4 md:p-5 flex-shrink-0">
+        <div className="font-display font-semibold text-marigold-soft mb-4 md:mb-6">Admin Panel</div>
+        <nav className="grid grid-cols-2 md:block gap-1">
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -41,13 +41,13 @@ export default function AdminLayout() {
             logout();
             navigate('/admin/login');
           }}
-          className="mt-8 text-[12px] text-ivory/60 underline"
+          className="mt-5 md:mt-8 text-[12px] text-ivory/60 underline"
         >
           Sign out
         </button>
       </aside>
 
-      <main className="flex-1 bg-[#FBF8F1] p-8">
+      <main className="flex-1 min-w-0 bg-[#FBF8F1] p-4 sm:p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
           <div />
           <div className="text-xs text-indigo/60">{user?.name} &middot; {user?.role}</div>

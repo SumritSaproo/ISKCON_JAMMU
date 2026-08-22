@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 const links = [
@@ -11,8 +12,11 @@ const links = [
 ];
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <nav className="flex items-center justify-between px-10 py-4 bg-ivory border-b border-indigo/10">
+    <nav className="relative bg-ivory border-b border-indigo/10 px-4 sm:px-6 lg:px-10 py-3 sm:py-4">
+      <div className="flex items-center justify-between">
       <Link to="/" className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-marigold-soft to-vermilion" />
         <div className="leading-tight">
@@ -21,7 +25,7 @@ export default function Navbar() {
         </div>
       </Link>
 
-      <div className="hidden md:flex gap-6 text-[13px] text-indigo">
+      <div className="hidden lg:flex gap-6 text-[13px] text-indigo">
         {links.map((l) => (
           <NavLink
             key={l.to}
@@ -37,10 +41,47 @@ export default function Navbar() {
 
       <Link
         to="/donate"
-        className="bg-vermilion text-ivory px-5 py-2.5 rounded text-[13px] font-semibold"
+        className="hidden lg:block bg-vermilion text-ivory px-4 sm:px-5 py-2.5 rounded text-[13px] font-semibold"
       >
         Donate / Seva
       </Link>
+      <button
+        type="button"
+        aria-expanded={isMenuOpen}
+        aria-controls="mobile-navigation"
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className="lg:hidden border border-indigo/20 rounded px-3 py-2 text-indigo text-lg leading-none"
+      >
+        {isMenuOpen ? '×' : '☰'}
+      </button>
+      </div>
+
+      {isMenuOpen && (
+        <div id="mobile-navigation" className="lg:hidden pt-3 pb-1">
+          <div className="grid gap-1 text-sm text-indigo">
+            {links.map((l) => (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                onClick={() => setIsMenuOpen(false)}
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded ${isActive ? 'bg-indigo/10 font-semibold' : ''}`
+                }
+              >
+                {l.label}
+              </NavLink>
+            ))}
+            <Link
+              to="/donate"
+              onClick={() => setIsMenuOpen(false)}
+              className="bg-vermilion text-ivory px-3 py-2 rounded font-semibold mt-1"
+            >
+              Donate / Seva
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

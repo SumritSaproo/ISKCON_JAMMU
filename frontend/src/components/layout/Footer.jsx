@@ -6,7 +6,7 @@ export default function Footer() {
   const [email, setEmail] = useState('');
 
   return (
-    <footer className="bg-indigo text-ivory px-10 py-10 mt-16">
+    <footer className="bg-indigo text-ivory px-4 sm:px-6 lg:px-10 py-10 mt-16">
       <div className="grid md:grid-cols-4 gap-8 text-sm">
         <div>
           <div className="font-display font-semibold text-marigold-soft mb-2">ISKCON Jammu</div>

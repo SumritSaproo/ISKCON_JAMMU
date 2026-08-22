@@ -6,7 +6,7 @@ export default function Gallery() {
   const { data: images, isLoading } = useGallery(tag ? { tag } : {});
 
   return (
-    <div className="px-10 py-14">
+    <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
       <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
         Moments of Bhakti
       </span>

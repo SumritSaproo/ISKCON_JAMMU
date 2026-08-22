@@ -4,7 +4,7 @@ export default function About() {
   const { data: settings } = useSettings();
 
   return (
-    <div className="px-10 py-14">
+    <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
       <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
         Our Story
       </span>
@@ -37,11 +37,11 @@ export default function About() {
           </div>
         </div>
 
-        <div className="w-72 h-80 rounded-t-full bg-gradient-to-br from-indigo to-indigo-deep flex-shrink-0" />
+        <div className="w-full max-w-xs h-64 sm:h-80 rounded-t-full bg-gradient-to-br from-indigo to-indigo-deep flex-shrink-0 mx-auto" />
       </div>
 
       {settings && (
-        <div className="bg-ivory-dim mt-10 -mx-10 px-10 py-8 grid sm:grid-cols-2 gap-6">
+        <div className="bg-ivory-dim mt-10 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-8 grid sm:grid-cols-2 gap-6">
           <div>
             <div className="font-display font-semibold text-sm text-indigo mb-1">Darshan Timings</div>
             <div className="text-xs text-indigo/60">

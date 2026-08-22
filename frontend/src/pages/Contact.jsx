@@ -7,7 +7,7 @@ export default function Contact() {
 
   return (
     <div className="flex flex-wrap">
-      <div className="flex-1 min-w-[280px] px-10 py-11">
+      <div className="flex-1 min-w-[280px] px-4 sm:px-6 lg:px-10 py-10 sm:py-11">
         <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
           We'd Love to See You
         </span>
