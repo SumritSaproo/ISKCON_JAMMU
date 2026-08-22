@@ -25,6 +25,17 @@ export function useUploadGalleryImage() {
   });
 }
 
+export function useDeleteGalleryImage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (imageId) => {
+      const { data } = await api.delete(`/gallery/${imageId}`);
+      return data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['gallery'] }),
+  });
+}
+
 // ---- Blog ----
 export function useBlogPosts(params = {}) {
   return useQuery({

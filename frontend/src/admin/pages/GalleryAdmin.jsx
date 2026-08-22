@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { useGallery, useUploadGalleryImage } from '../../api/content';
+import { useGallery, useUploadGalleryImage, useDeleteGalleryImage } from '../../api/content';
 
 export default function GalleryAdmin() {
   const { data: images, isLoading } = useGallery({ limit: 50 });
   const uploadImage = useUploadGalleryImage();
+  const deleteImage = useDeleteGalleryImage();
   const fileRef = useRef(null);
   const [caption, setCaption] = useState('');
   const [tags, setTags] = useState('');
@@ -67,12 +68,23 @@ export default function GalleryAdmin() {
       ) : (
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
           {images?.map((img) => (
-            <div key={img._id} className="aspect-square rounded overflow-hidden bg-indigo-deep">
+            <div key={img._id} className="relative aspect-square rounded overflow-hidden bg-indigo-deep">
               <img
                 src={img.thumbnailUrl || img.imageUrl}
                 alt={img.caption || ''}
                 className="w-full h-full object-cover"
               />
+              <button
+                type="button"
+                aria-label={`Delete ${img.caption || 'gallery image'}`}
+                disabled={deleteImage.isPending}
+                onClick={() => {
+                  if (window.confirm('Delete this image from the gallery?')) deleteImage.mutate(img._id);
+                }}
+                className="absolute right-1 top-1 rounded bg-vermilion/90 px-2 py-1 text-xs text-ivory disabled:opacity-60"
+              >
+                Delete
+              </button>
             </div>
           ))}
         </div>
