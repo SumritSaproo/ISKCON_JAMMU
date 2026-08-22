@@ -28,6 +28,8 @@ const rsvpSchema = z.object({
 
 // Public
 router.get('/', controller.getUpcomingEvents);
+// Keep this before /:slug so "admin" is not treated as an event slug.
+router.get('/admin', requireAuth, requireRole('superadmin', 'editor'), controller.getAdminUpcomingEvents);
 router.get('/:slug', controller.getEvent);
 router.post('/:id/rsvp', sensitiveActionLimiter, validate(rsvpSchema), controller.rsvpToEvent);
 

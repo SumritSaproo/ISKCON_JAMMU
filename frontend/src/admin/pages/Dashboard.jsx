@@ -1,4 +1,4 @@
-import { useUpcomingEvents } from '../../api/events';
+import { useAdminUpcomingEvents } from '../../api/events';
 import { useAdminDonations } from '../../api/admin';
 import { useAdminVolunteers } from '../../api/admin';
 import { useGallery } from '../../api/content';
@@ -13,7 +13,7 @@ function StatCard({ label, value }) {
 }
 
 export default function Dashboard() {
-  const { data: events } = useUpcomingEvents();
+  const { data: events } = useAdminUpcomingEvents();
   const { data: donations } = useAdminDonations({ status: 'paid', limit: 200 });
   const { data: volunteers } = useAdminVolunteers({ status: 'new' });
   const { data: images } = useGallery({ limit: 1 });

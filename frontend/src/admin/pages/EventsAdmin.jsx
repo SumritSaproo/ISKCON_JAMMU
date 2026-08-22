@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUpcomingEvents } from '../../api/events';
+import { useAdminUpcomingEvents } from '../../api/events';
 import { useCreateEvent, useDeleteEvent } from '../../api/admin';
 
 const CATEGORIES = ['festival', 'satsang', 'seva', 'workshop', 'other'];
@@ -12,7 +12,7 @@ function getMinimumEventDate() {
 }
 
 export default function EventsAdmin() {
-  const { data: events, isLoading } = useUpcomingEvents();
+  const { data: events, isLoading } = useAdminUpcomingEvents();
   const createEvent = useCreateEvent();
   const deleteEvent = useDeleteEvent();
   const [showForm, setShowForm] = useState(false);
@@ -52,10 +52,11 @@ export default function EventsAdmin() {
       setError('The cover photo is too large. Please choose an image under 8 MB.');
       return;
     }
+    const isoStartDate = form.startDate ? new Date(form.startDate).toISOString() : undefined;
     let payload = {
       title: form.title,
       description: form.description,
-      startDate: form.startDate,
+      startDate: isoStartDate,
       category: form.category,
       rsvpEnabled: form.rsvpEnabled,
     };
@@ -64,7 +65,7 @@ export default function EventsAdmin() {
       payload = new FormData();
       payload.append('title', form.title);
       payload.append('description', form.description);
-      payload.append('startDate', form.startDate);
+      payload.append('startDate', isoStartDate);
       payload.append('category', form.category);
       payload.append('rsvpEnabled', String(form.rsvpEnabled));
       payload.append('coverImage', form.coverImage);
@@ -206,6 +207,7 @@ export default function EventsAdmin() {
                 <div className="font-semibold text-indigo">{ev.title}</div>
                 <div className="text-indigo/50">
                   {new Date(ev.startDate).toLocaleDateString('en-IN')} &middot; {ev.category}
+                  {ev.rsvpEnabled && ` · ${ev.rsvpCount || 0} RSVPs`}
                 </div>
               </div>
               <button

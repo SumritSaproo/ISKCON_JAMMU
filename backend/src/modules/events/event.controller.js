@@ -14,6 +14,19 @@ async function getUpcomingEvents(req, res, next) {
   }
 }
 
+async function getAdminUpcomingEvents(req, res, next) {
+  try {
+    const { category, limit } = req.query;
+    const events = await eventService.listAdminUpcomingEvents({
+      category,
+      limit: limit ? Number(limit) : undefined,
+    });
+    res.json({ success: true, data: events });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getEvent(req, res, next) {
   try {
     const event = await eventService.getEventBySlug(req.params.slug);
@@ -69,6 +82,7 @@ async function deleteEvent(req, res, next) {
 
 module.exports = {
   getUpcomingEvents,
+  getAdminUpcomingEvents,
   getEvent,
   createEvent,
   updateEvent,

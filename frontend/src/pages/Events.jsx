@@ -91,9 +91,6 @@ export default function Events() {
         {singleEvent.rsvpEnabled && (
           <div className="mt-6 bg-ivory-dim rounded-lg p-5">
             <div className="font-display font-semibold text-sm text-indigo mb-1">RSVP</div>
-            <div className="text-[11px] text-indigo/60 mb-2">
-              {singleEvent.rsvpCount || 0} people attending
-            </div>
             <RsvpForm eventId={singleEvent._id} />
           </div>
         )}

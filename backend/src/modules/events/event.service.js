@@ -18,13 +18,21 @@ async function listUpcomingEvents({ category, limit = 20 } = {}) {
   return cacheAside(cacheKey, 300, async () => {
     const query = { startDate: { $gte: new Date() } };
     if (category) query.category = category;
-    return Event.find(query).sort({ startDate: 1 }).limit(limit).lean();
+    return Event.find(query).select('-rsvpCount -rsvps').sort({ startDate: 1 }).limit(limit).lean();
   });
+}
+
+async function listAdminUpcomingEvents({ category, limit = 100 } = {}) {
+  const query = { startDate: { $gte: new Date() } };
+  if (category) query.category = category;
+  return Event.find(query).sort({ startDate: 1 }).limit(limit).lean();
 }
 
 async function getEventBySlug(slug) {
   const event = await Event.findOne({ slug }).lean();
   if (!event) throw new AppError('Event not found', 404);
+  delete event.rsvpCount;
+  delete event.rsvps;
   return event;
 }
 
@@ -57,7 +65,7 @@ async function rsvpToEvent(id, { name, email, phone }) {
   event.rsvpCount = event.rsvps.length;
   await event.save();
   await invalidateUpcomingCache();
-  return { rsvpCount: event.rsvpCount };
+  return { success: true };
 }
 
 async function deleteEvent(id) {
@@ -79,6 +87,7 @@ async function invalidateUpcomingCache() {
 
 module.exports = {
   listUpcomingEvents,
+  listAdminUpcomingEvents,
   getEventBySlug,
   createEvent,
   updateEvent,

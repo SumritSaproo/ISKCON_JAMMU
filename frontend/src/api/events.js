@@ -11,6 +11,13 @@ export function useUpcomingEvents(category) {
   });
 }
 
+export function useAdminUpcomingEvents() {
+  return useQuery({
+    queryKey: ['admin', 'events', 'upcoming'],
+    queryFn: async () => (await api.get('/events/admin')).data.data,
+  });
+}
+
 export function useEvent(slug) {
   return useQuery({
     queryKey: ['events', slug],
