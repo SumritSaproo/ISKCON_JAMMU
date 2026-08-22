@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const { z } = require('zod');
 const controller = require('./event.controller');
 const validate = require('../../middlewares/validate');
@@ -7,6 +8,17 @@ const { requireAuth, requireRole } = require('../../middlewares/auth.middleware'
 const { sensitiveActionLimiter } = require('../../middlewares/rateLimiter');
 
 const router = express.Router();
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 8 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new Error('Cover photo must be a JPEG, PNG, or WEBP image'));
+    }
+    cb(null, true);
+  },
+});
 
 const rsvpSchema = z.object({
   name: z.string().min(2),
@@ -24,6 +36,7 @@ router.post(
   '/',
   requireAuth,
   requireRole('superadmin', 'editor'),
+  upload.single('coverImage'),
   validate(createEventSchema),
   controller.createEvent
 );

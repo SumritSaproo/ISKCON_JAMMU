@@ -6,6 +6,7 @@ const eventSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true, index: true },
     description: { type: String, required: true },
     coverImage: { type: String }, // Cloudinary URL
+    coverImagePublicId: { type: String },
     startDate: { type: Date, required: true, index: true },
     endDate: { type: Date },
     location: { type: String, default: 'ISKCON Jammu, Dream City, Muthi, Jammu' },

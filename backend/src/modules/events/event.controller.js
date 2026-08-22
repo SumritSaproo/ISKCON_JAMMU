@@ -1,4 +1,5 @@
 const eventService = require('./event.service');
+const { uploadImage } = require('../../config/cloudinary');
 
 async function getUpcomingEvents(req, res, next) {
   try {
@@ -24,7 +25,15 @@ async function getEvent(req, res, next) {
 
 async function createEvent(req, res, next) {
   try {
-    const event = await eventService.createEvent(req.body, req.user.id);
+    const data = { ...req.body };
+    if (typeof data.rsvpEnabled === 'string') data.rsvpEnabled = data.rsvpEnabled === 'true';
+    if (req.file) {
+      const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      const uploaded = await uploadImage(dataUri, 'iskcon-jammu/events');
+      data.coverImage = uploaded.url;
+      data.coverImagePublicId = uploaded.publicId;
+    }
+    const event = await eventService.createEvent(data, req.user.id);
     res.status(201).json({ success: true, data: event });
   } catch (err) {
     next(err);

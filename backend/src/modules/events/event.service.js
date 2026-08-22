@@ -1,6 +1,7 @@
 const Event = require('./event.model');
 const { cacheAside, redis } = require('../../config/redis');
 const { AppError } = require('../../middlewares/errorHandler');
+const { cloudinary } = require('../../config/cloudinary');
 
 function slugify(title) {
   return title
@@ -62,6 +63,9 @@ async function rsvpToEvent(id, { name, email, phone }) {
 async function deleteEvent(id) {
   const event = await Event.findByIdAndDelete(id);
   if (!event) throw new AppError('Event not found', 404);
+  if (event.coverImagePublicId) {
+    await cloudinary.uploader.destroy(event.coverImagePublicId, { resource_type: 'image' });
+  }
   await invalidateUpcomingCache();
   return event;
 }

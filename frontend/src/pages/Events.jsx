@@ -78,6 +78,15 @@ export default function Events() {
         <h1 className="font-display font-semibold text-2xl text-indigo mt-2 mb-4">
           {singleEvent.title}
         </h1>
+        {singleEvent.coverImage && (
+          <div className="w-full aspect-video max-h-96 rounded-lg overflow-hidden mb-5 bg-indigo-deep">
+            <img
+              src={singleEvent.coverImage}
+              alt={singleEvent.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         <p className="text-sm text-indigo/70 leading-relaxed">{singleEvent.description}</p>
         {singleEvent.rsvpEnabled && (
           <div className="mt-6 bg-ivory-dim rounded-lg p-5">
@@ -126,7 +135,16 @@ export default function Events() {
               to={`/events/${event.slug}`}
               className="bg-white border border-indigo/10 rounded-lg overflow-hidden block hover:shadow-md transition"
             >
-              <div className="h-24 bg-gradient-to-br from-indigo to-indigo-deep" />
+              <div className="aspect-video w-full bg-gradient-to-br from-indigo to-indigo-deep">
+                {event.coverImage && (
+                  <img
+                    src={event.coverImage}
+                    alt={event.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+              </div>
               <div className="p-4">
                 <div className="text-[10px] text-vermilion font-semibold">
                   {new Date(event.startDate).toLocaleDateString('en-IN', {
