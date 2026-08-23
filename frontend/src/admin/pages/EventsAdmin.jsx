@@ -12,7 +12,7 @@ function getMinimumEventDate() {
 }
 
 export default function EventsAdmin() {
-  const { data: events, isLoading } = useAdminUpcomingEvents();
+  const { data: events, isLoading, isError: isEventsError, error: eventsError } = useAdminUpcomingEvents();
   const createEvent = useCreateEvent();
   const deleteEvent = useDeleteEvent();
   const [showForm, setShowForm] = useState(false);
@@ -53,21 +53,13 @@ export default function EventsAdmin() {
       return;
     }
     const isoStartDate = form.startDate ? new Date(form.startDate).toISOString() : undefined;
-    let payload = {
-      title: form.title,
-      description: form.description,
-      startDate: isoStartDate,
-      category: form.category,
-      rsvpEnabled: form.rsvpEnabled,
-    };
-
+    const payload = new FormData();
+    payload.append('title', form.title);
+    payload.append('description', form.description);
+    payload.append('startDate', isoStartDate);
+    payload.append('category', form.category);
+    payload.append('rsvpEnabled', String(form.rsvpEnabled));
     if (form.coverImage) {
-      payload = new FormData();
-      payload.append('title', form.title);
-      payload.append('description', form.description);
-      payload.append('startDate', isoStartDate);
-      payload.append('category', form.category);
-      payload.append('rsvpEnabled', String(form.rsvpEnabled));
       payload.append('coverImage', form.coverImage);
     }
 
@@ -193,7 +185,11 @@ export default function EventsAdmin() {
       )}
 
       <div className="bg-white border border-indigo/10 rounded-lg overflow-hidden">
-        {isLoading ? (
+        {isEventsError ? (
+          <div role="alert" className="p-4 text-xs text-vermilion">
+            {eventsError?.response?.data?.message || 'Could not load events. Please sign in again and retry.'}
+          </div>
+        ) : isLoading ? (
           <div className="p-4 text-xs text-indigo/50">Loading…</div>
         ) : !events?.length ? (
           <div className="p-4 text-xs text-indigo/50">No events yet.</div>

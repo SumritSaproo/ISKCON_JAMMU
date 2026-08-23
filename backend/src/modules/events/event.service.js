@@ -21,10 +21,12 @@ async function listUpcomingEvents({ category, limit = 20 } = {}) {
   });
 }
 
-async function listAdminUpcomingEvents({ category, limit = 100 } = {}) {
+async function listAdminUpcomingEvents({ category, limit } = {}) {
   const query = {};
   if (category) query.category = category;
-  return Event.find(query).sort({ startDate: -1 }).limit(limit).lean();
+  const eventsQuery = Event.find(query).sort({ startDate: -1 });
+  if (limit) eventsQuery.limit(limit);
+  return eventsQuery.lean();
 }
 
 async function getEventBySlug(slug) {
