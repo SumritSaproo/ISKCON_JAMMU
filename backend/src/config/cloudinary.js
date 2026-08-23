@@ -18,4 +18,12 @@ async function uploadImage(filePathOrBuffer, folder = 'iskcon-jammu/misc') {
   return { url: result.secure_url, publicId: result.public_id };
 }
 
-module.exports = { cloudinary, uploadImage };
+async function uploadAudio(filePathOrBuffer, folder = 'iskcon-jammu/audio') {
+  const result = await cloudinary.uploader.upload(filePathOrBuffer, {
+    folder,
+    resource_type: 'video',
+  });
+  return { url: result.secure_url, publicId: result.public_id };
+}
+
+module.exports = { cloudinary, uploadImage, uploadAudio };

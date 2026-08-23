@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { defaultSiteContent, useSettings } from '../../api/content';
-import { useUpdateSettings, useUploadBackgroundImage } from '../../api/admin';
+import { useUpdateSettings, useUploadBackgroundImage, useUploadSiteAudio } from '../../api/admin';
 
 const initialForm = {
   morning: '',
@@ -9,6 +9,9 @@ const initialForm = {
   backgroundImage: '',
   backgroundImageOpacity: 1,
   backgroundFileName: '',
+  audioUrl: '',
+  audioTitle: 'Temple Kirtan',
+  audioFileName: '',
   home: defaultSiteContent.home,
   about: defaultSiteContent.about,
   footer: defaultSiteContent.footer,
@@ -18,6 +21,7 @@ export default function SettingsAdmin() {
   const { data: settings, isLoading } = useSettings();
   const updateSettings = useUpdateSettings();
   const uploadBackgroundImage = useUploadBackgroundImage();
+  const uploadSiteAudio = useUploadSiteAudio();
   const [form, setForm] = useState(initialForm);
   const [saved, setSaved] = useState(false);
 
@@ -30,6 +34,9 @@ export default function SettingsAdmin() {
         backgroundImage: settings.backgroundImage || '',
         backgroundImageOpacity: settings.backgroundImageOpacity ?? 1,
         backgroundFileName: currentForm.backgroundFileName,
+        audioUrl: settings.audioUrl || '',
+        audioTitle: settings.audioTitle || 'Temple Kirtan',
+        audioFileName: currentForm.audioFileName,
         home: { ...defaultSiteContent.home, ...settings.home },
         about: { ...defaultSiteContent.about, ...settings.about },
         footer: { ...defaultSiteContent.footer, ...settings.footer },
@@ -50,6 +57,8 @@ export default function SettingsAdmin() {
         announcementBanner: form.announcementBanner,
         backgroundImage: form.backgroundImage,
         backgroundImageOpacity: form.backgroundImageOpacity,
+        audioUrl: form.audioUrl,
+        audioTitle: form.audioTitle,
         home: form.home,
         about: form.about,
         footer: form.footer,
@@ -63,6 +72,15 @@ export default function SettingsAdmin() {
     if (file) {
       setForm({ ...form, backgroundFileName: file.name });
       uploadBackgroundImage.mutate(file);
+    }
+    e.target.value = '';
+  }
+
+  function handleAudioUpload(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm({ ...form, audioFileName: file.name });
+      uploadSiteAudio.mutate(file);
     }
     e.target.value = '';
   }
@@ -113,6 +131,32 @@ export default function SettingsAdmin() {
             />
             <span className="text-[10px] text-indigo/50">{Math.round(form.backgroundImageOpacity * 100)}% image opacity</span>
           </label>
+        </section>
+
+        <section className="bg-white border border-indigo/10 rounded-lg p-5">
+          <h2 className="font-display font-semibold text-sm text-indigo mb-4">Site Music</h2>
+          <Field
+            label="Song Title"
+            value={form.audioTitle}
+            onChange={(value) => setForm({ ...form, audioTitle: value })}
+          />
+          <label className="block text-[11px] text-indigo/60 mb-2">
+            Audio File
+            <input
+              type="file"
+              accept="audio/mpeg,audio/wav,audio/ogg,audio/aac,audio/mp4"
+              onChange={handleAudioUpload}
+              disabled={uploadSiteAudio.isPending}
+              className="block w-full mt-1 text-xs"
+            />
+            {form.audioFileName && (
+              <span className="block text-[10px] text-teal mt-1">Uploaded: {form.audioFileName}</span>
+            )}
+          </label>
+          <p className="text-[11px] text-indigo/50 leading-relaxed">
+            Recommended: MP3, 128–320 kbps, maximum 16 MB. Use music you have permission to publish.
+            Browsers may require the visitor to click Yes before audio can play.
+          </p>
         </section>
 
         <section className="bg-white border border-indigo/10 rounded-lg p-5">

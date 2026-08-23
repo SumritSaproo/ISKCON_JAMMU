@@ -17,6 +17,9 @@ const settingsSchema = new mongoose.Schema(
     backgroundImage: { type: String, default: '' },
     backgroundImagePublicId: { type: String, default: '' },
     backgroundImageOpacity: { type: Number, min: 0, max: 1, default: 1 },
+    audioUrl: { type: String, default: '' },
+    audioPublicId: { type: String, default: '' },
+    audioTitle: { type: String, default: 'Temple Kirtan' },
     home: {
       eyebrow: { type: String, default: 'Hare Krishna · Welcome' },
       title: { type: String, default: 'A home for Krishna\nconsciousness in Jammu' },

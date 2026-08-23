@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useSettings } from './api/content';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import { SiteAudioProvider } from './components/layout/SiteAudio';
 import Home from './pages/Home';
 import About from './pages/About';
 import Events from './pages/Events';
@@ -33,13 +34,15 @@ function PublicLayout({ children }) {
     : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="site-main flex-1" style={backgroundStyle}>
-        <div className="site-main-content">{children}</div>
-      </main>
-      <Footer />
-    </div>
+    <SiteAudioProvider settings={settings}>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="site-main flex-1" style={backgroundStyle}>
+          <div className="site-main-content">{children}</div>
+        </main>
+        <Footer />
+      </div>
+    </SiteAudioProvider>
   );
 }
 

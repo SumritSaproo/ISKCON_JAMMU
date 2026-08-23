@@ -120,3 +120,15 @@ export function useUploadBackgroundImage() {
     onSuccess: (settings) => qc.setQueryData(['settings'], settings),
   });
 }
+
+export function useUploadSiteAudio() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (file) => {
+      const formData = new FormData();
+      formData.append('audio', file);
+      return (await api.post('/settings/audio', formData)).data.data;
+    },
+    onSuccess: (settings) => qc.setQueryData(['settings'], settings),
+  });
+}
