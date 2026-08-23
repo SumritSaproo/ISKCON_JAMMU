@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useBlogPosts, useBlogPost } from '../api/content';
+import BackButton from '../components/BackButton';
 
 export default function Blog() {
   const { slug } = useParams();
@@ -11,6 +12,7 @@ export default function Blog() {
   if (slug && post) {
     return (
       <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 max-w-2xl">
+        <BackButton />
         <div className="text-[10px] text-vermilion font-semibold">
           {new Date(post.publishedAt).toLocaleDateString('en-IN', {
             month: 'long',
@@ -60,7 +62,7 @@ export default function Blog() {
       </div>
 
       <div className="flex-1 min-w-[180px]">
-        <div className="bg-ivory-dim rounded-lg p-5">
+        <div className="bg-ivory-dim/75 rounded-lg p-5">
           <div className="font-display font-semibold text-[13px] text-indigo mb-3">Language</div>
           <div className="flex gap-2">
             {[

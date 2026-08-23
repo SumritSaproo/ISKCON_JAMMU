@@ -1,6 +1,41 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './client';
 
+export const defaultSiteContent = {
+  home: {
+    eyebrow: 'Hare Krishna · Welcome',
+    title: 'A home for Krishna\nconsciousness in Jammu',
+    description:
+      'Join us for daily darshan, kirtan and prasadam at ISKCON Jammu — nestled in Dream City, Muthi. All are welcome, every day of the year.',
+    primaryCta: "Today's Darshan Timings",
+    secondaryCta: 'Plan a Visit',
+  },
+  about: {
+    eyebrow: 'Our Story',
+    title: 'About ISKCON Jammu',
+    paragraphOne:
+      'ISKCON Jammu, situated in Dream City, Muthi, serves as a spiritual home for devotees across the region — offering daily worship, scriptural study and community festivals rooted in the Gaudiya Vaishnava tradition founded by Srila Prabhupada.',
+    paragraphTwo:
+      'The temple welcomes visitors of every background for darshan, kirtan, and prasadam — with a growing congregation active in seva, youth programs and outreach across Jammu.',
+    deitiesHeading: 'Presiding Deities',
+    deitiesText: 'Sri Sri Radha Krishna',
+    founderHeading: 'Founder-Acharya',
+    founderText: 'His Divine Grace A.C. Bhaktivedanta Swami Prabhupada',
+  },
+  footer: {
+    brand: 'ISKCON Jammu',
+    description: 'Dream City, Muthi, Jammu, J&K — a home for Krishna consciousness in the region.',
+    contactHeading: 'Contact',
+    contactText: 'info@iskconjammu.org\n+91 XXXXX XXXXX',
+    timingsHeading: 'Daily Timings',
+    timingsText: 'Mangala Aarti — 4:30 AM\nSandhya Aarti — 7:00 PM',
+    newsletterHeading: 'Newsletter',
+    newsletterPlaceholder: 'Your email',
+    newsletterButton: 'Join',
+    newsletterSuccess: 'Subscribed — thank you!',
+  },
+};
+
 // ---- Gallery ----
 export function useGallery(params = {}) {
   return useQuery({
@@ -66,5 +101,6 @@ export function useSettings() {
       const { data } = await api.get('/settings');
       return data.data;
     },
+    refetchOnMount: 'always',
   });
 }

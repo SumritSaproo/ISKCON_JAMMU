@@ -17,6 +17,15 @@ const upload = multer({
   },
 });
 
+router.get('/stats', requireAuth, requireRole('superadmin', 'editor'), async (req, res, next) => {
+  try {
+    const count = await GalleryImage.countDocuments();
+    res.json({ success: true, data: { count } });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/', async (req, res, next) => {
   try {
     const { eventId, tag, page = 1, limit = 24 } = req.query;

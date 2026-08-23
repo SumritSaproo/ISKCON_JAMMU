@@ -16,3 +16,33 @@ textarea,
 select {
   font: inherit;
 }
+
+.site-main {
+  position: relative;
+  isolation: isolate;
+  background: #f6efe2;
+}
+
+.site-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--site-background-image, none) center / cover fixed no-repeat;
+  opacity: var(--site-background-opacity, 0);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.site-main-content {
+  position: relative;
+  z-index: 1;
+}
+
+.prose iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+}

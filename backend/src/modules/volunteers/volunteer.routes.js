@@ -39,6 +39,23 @@ router.post('/', sensitiveActionLimiter, validate(registerSchema), async (req, r
 });
 
 // Admin: list and manage volunteers
+router.get('/stats', requireAuth, requireRole('superadmin', 'editor'), async (req, res, next) => {
+  try {
+    const activeVolunteers = await Volunteer.find({ status: 'active' })
+      .select('name')
+      .sort({ name: 1 });
+    res.json({
+      success: true,
+      data: {
+        count: activeVolunteers.length,
+        names: activeVolunteers.map((volunteer) => volunteer.name),
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/', requireAuth, requireRole('superadmin', 'editor'), async (req, res, next) => {
   try {
     const { status, page = 1, limit = 50 } = req.query;

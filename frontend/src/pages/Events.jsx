@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useUpcomingEvents, useEvent } from '../api/events';
 import { useRsvpEvent } from '../api/forms';
+import BackButton from '../components/BackButton';
 
 const CATEGORIES = ['all', 'festival', 'satsang', 'seva', 'workshop', 'other'];
 
@@ -67,6 +68,7 @@ export default function Events() {
   if (slug && singleEvent) {
     return (
       <div className="px-4 sm:px-6 lg:px-10 py-10 sm:py-14 max-w-2xl">
+        <BackButton />
         <div className="text-[10.5px] text-vermilion font-semibold">
           {new Date(singleEvent.startDate).toLocaleDateString('en-IN', {
             month: 'long',

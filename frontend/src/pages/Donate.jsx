@@ -135,7 +135,7 @@ export default function Donate() {
         ))}
       </div>
 
-      <form onSubmit={handlePay} className="bg-ivory-dim rounded-lg p-6 max-w-sm">
+      <form onSubmit={handlePay} className="bg-ivory-dim/85 rounded-lg p-6 max-w-sm">
         <div className="font-display font-semibold text-sm text-indigo mb-3">Quick Donate</div>
 
         <div className="flex gap-2 mb-4 flex-wrap">

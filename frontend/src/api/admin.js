@@ -45,11 +45,27 @@ export function useAdminVolunteers(params = {}) {
     queryFn: async () => (await api.get('/volunteers', { params })).data.data,
   });
 }
+export function useAdminVolunteerStats() {
+  return useQuery({
+    queryKey: ['admin', 'volunteers', 'stats'],
+    queryFn: async () => (await api.get('/volunteers/stats')).data.data,
+  });
+}
 export function useUpdateVolunteerStatus() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, status }) => (await api.patch(`/volunteers/${id}`, { status })).data.data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'volunteers'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'volunteers'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'volunteers', 'stats'] });
+    },
+  });
+}
+
+export function useAdminGalleryStats() {
+  return useQuery({
+    queryKey: ['admin', 'gallery', 'stats'],
+    queryFn: async () => (await api.get('/gallery/stats')).data.data,
   });
 }
 
@@ -89,6 +105,18 @@ export function useUpdateSettings() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload) => (await api.patch('/settings', payload)).data.data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
+    onSuccess: (settings) => qc.setQueryData(['settings'], settings),
+  });
+}
+
+export function useUploadBackgroundImage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (file) => {
+      const formData = new FormData();
+      formData.append('image', file);
+      return (await api.post('/settings/background-image', formData)).data.data;
+    },
+    onSuccess: (settings) => qc.setQueryData(['settings'], settings),
   });
 }

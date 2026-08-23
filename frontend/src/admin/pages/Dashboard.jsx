@@ -1,7 +1,9 @@
 import { useAdminUpcomingEvents } from '../../api/events';
-import { useAdminDonations } from '../../api/admin';
-import { useAdminVolunteers } from '../../api/admin';
-import { useGallery } from '../../api/content';
+import {
+  useAdminDonations,
+  useAdminGalleryStats,
+  useAdminVolunteerStats,
+} from '../../api/admin';
 
 function StatCard({ label, value }) {
   return (
@@ -15,8 +17,8 @@ function StatCard({ label, value }) {
 export default function Dashboard() {
   const { data: events } = useAdminUpcomingEvents();
   const { data: donations } = useAdminDonations({ status: 'paid', limit: 200 });
-  const { data: volunteers } = useAdminVolunteers({ status: 'new' });
-  const { data: images } = useGallery({ limit: 1 });
+  const { data: volunteerStats } = useAdminVolunteerStats();
+  const { data: galleryStats } = useAdminGalleryStats();
 
   const totalDonations = (donations || []).reduce((sum, d) => sum + d.amount, 0);
 
@@ -29,8 +31,23 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-8">
         <StatCard label="Donations Received" value={`₹${totalDonations.toLocaleString('en-IN')}`} />
         <StatCard label="Upcoming Events" value={events?.length ?? '—'} />
-        <StatCard label="New Volunteer Signups" value={volunteers?.length ?? '—'} />
-        <StatCard label="Gallery Photos" value={images?.length ?? '—'} />
+        <StatCard label="Active Volunteers" value={volunteerStats?.count ?? '—'} />
+        <StatCard label="Gallery Photos" value={galleryStats?.count ?? '—'} />
+      </div>
+
+      <div className="bg-white border border-indigo/10 rounded-lg p-4 mb-8">
+        <div className="text-[12.5px] font-semibold text-indigo mb-3">Active Volunteers</div>
+        {volunteerStats?.names?.length ? (
+          <div className="flex flex-wrap gap-2">
+            {volunteerStats.names.map((name) => (
+              <span key={name} className="text-xs bg-teal/10 text-teal px-2.5 py-1 rounded-full">
+                {name}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <div className="text-xs text-indigo/50">No active volunteers yet.</div>
+        )}
       </div>
 
       <div className="bg-white border border-indigo/10 rounded-lg overflow-x-auto">

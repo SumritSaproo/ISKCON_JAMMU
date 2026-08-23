@@ -50,7 +50,7 @@ export default function Volunteer() {
           e.preventDefault();
           registerVolunteer.mutate(form);
         }}
-        className="bg-ivory-dim rounded-lg p-6"
+        className="bg-ivory-dim/85 rounded-lg p-6"
       >
         <input
           required

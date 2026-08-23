@@ -1,32 +1,32 @@
 import { Link } from 'react-router-dom';
 import { useUpcomingEvents } from '../api/events';
+import { defaultSiteContent, useSettings } from '../api/content';
 
 export default function Home() {
   const { data: events, isLoading } = useUpcomingEvents();
+  const { data: settings } = useSettings();
+  const content = { ...defaultSiteContent.home, ...settings?.home };
   const featured = events?.find((e) => e.isFeatured) || events?.[0];
 
   return (
     <div>
-      <section className="flex flex-col sm:flex-row items-center gap-8 lg:gap-11 px-4 sm:px-6 lg:px-10 py-10 sm:py-14 bg-gradient-to-b from-ivory to-ivory-dim">
+      <section className="flex flex-col sm:flex-row items-center gap-8 lg:gap-11 px-4 sm:px-6 lg:px-10 py-10 sm:py-14 bg-ivory/70">
         <div className="flex-1">
           <span className="text-[10.5px] tracking-widest uppercase text-vermilion font-semibold block mb-2">
-            Hare Krishna &middot; Welcome
+            {content.eyebrow}
           </span>
-          <h1 className="font-display font-semibold text-3xl sm:text-4xl leading-tight text-indigo mb-4">
-            A home for Krishna
-            <br />
-            consciousness in Jammu
+          <h1 className="font-display font-semibold text-3xl sm:text-4xl leading-tight text-indigo mb-4 whitespace-pre-line">
+            {content.title}
           </h1>
           <p className="text-sm text-indigo/70 leading-relaxed max-w-md mb-6">
-            Join us for daily darshan, kirtan and prasadam at ISKCON Jammu — nestled in Dream
-            City, Muthi. All are welcome, every day of the year.
+            {content.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/about" className="bg-vermilion text-ivory px-5 py-2.5 rounded text-[13px] font-semibold">
-              Today's Darshan Timings
+              {content.primaryCta}
             </Link>
             <Link to="/contact" className="border border-indigo text-indigo px-5 py-2.5 rounded text-[13px] font-semibold">
-              Plan a Visit
+              {content.secondaryCta}
             </Link>
           </div>
         </div>
