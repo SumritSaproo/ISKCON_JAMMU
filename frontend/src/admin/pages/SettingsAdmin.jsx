@@ -80,7 +80,14 @@ export default function SettingsAdmin() {
     const file = e.target.files?.[0];
     if (file) {
       setForm({ ...form, audioFileName: file.name });
-      uploadSiteAudio.mutate(file);
+      uploadSiteAudio.mutate(file, {
+        onSuccess: (settings) => {
+          setForm((currentForm) => ({
+            ...currentForm,
+            audioUrl: settings.audioUrl || '',
+          }));
+        },
+      });
     }
     e.target.value = '';
   }
@@ -228,10 +235,14 @@ export default function SettingsAdmin() {
         {saved && <p className="text-[11px] text-teal mb-2">Saved.</p>}
 
         <button
-          disabled={updateSettings.isPending}
+          disabled={updateSettings.isPending || uploadSiteAudio.isPending || uploadBackgroundImage.isPending}
           className="bg-indigo text-ivory text-xs font-semibold px-4 py-2 rounded disabled:opacity-60"
         >
-          {updateSettings.isPending ? 'Saving…' : 'Save Settings'}
+          {uploadSiteAudio.isPending || uploadBackgroundImage.isPending
+            ? 'Uploading…'
+            : updateSettings.isPending
+              ? 'Saving…'
+              : 'Save Settings'}
         </button>
       </form>
     </div>
